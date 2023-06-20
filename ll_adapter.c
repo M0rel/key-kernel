@@ -1,6 +1,11 @@
 /* This file contain low level adapters (STM32 HAL -> Key kernel) */
 #include "ll_adapter.h"
 
+#include "usbd_hid.h"
+#include "usb_device.h"
+
+extern USBD_HandleTypeDef hUsbDeviceFS;
+
 uint16_t col_gpios[] = {
         GPIO_PIN_0,  /* index = 0 */
         GPIO_PIN_1,  /* index = 1 */
@@ -52,4 +57,9 @@ bool get_button_state_ll(uint8_t index)
 void delay_ms(uint32_t delay)
 {
         HAL_Delay(delay);
+}
+
+void usb_send_report(void *report, size_t size)
+{
+        USBD_HID_SendReport(&hUsbDeviceFS, (uint8_t *)report, size);
 }

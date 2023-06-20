@@ -18,4 +18,6 @@ bool get_button_state_ll(uint8_t index);
 
 void delay_ms(uint32_t delay);
 
+void usb_send_report(void *report, size_t size);
+
 #endif /* __LL_ADAPTER_H__ */
