@@ -20,4 +20,11 @@ void delay_ms(uint32_t delay);
 
 void usb_send_report(void *report, size_t size);
 
+void start_timer(void);
+
+void set_current_time(void);
+void clean_time(void);
+
+bool is_time_passed_ms(size_t time_ms);
+
 #endif /* __LL_ADAPTER_H__ */

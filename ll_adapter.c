@@ -4,8 +4,13 @@
 #include "usbd_hid.h"
 #include "usb_device.h"
 
+#include "stm32f4xx_hal_tim.h"
+
 extern USBD_HandleTypeDef hUsbDeviceFS;
 
+extern TIM_HandleTypeDef htim11;
+
+volatile uint16_t timer_val = 0;
 uint16_t col_gpios[] = {
         GPIO_PIN_0,  /* index = 0 */
         GPIO_PIN_1,  /* index = 1 */
@@ -62,4 +67,31 @@ void delay_ms(uint32_t delay)
 void usb_send_report(void *report, size_t size)
 {
         USBD_HID_SendReport(&hUsbDeviceFS, (uint8_t *)report, size);
+}
+
+void start_timer(void)
+{
+        HAL_TIM_Base_Start(&htim11);
+}
+
+void set_current_time(void)
+{
+        timer_val = __HAL_TIM_GET_COUNTER(&htim11);
+}
+
+void clean_time(void)
+{
+        timer_val = 0;
+}
+
+bool is_time_passed_ms(size_t time_ms)
+{
+        if (__HAL_TIM_GET_COUNTER(&htim11) - timer_val >= time_ms * 10)
+        {
+                timer_val = __HAL_TIM_GET_COUNTER(&htim11);
+
+                return true;
+        }
+
+        return false;
 }
