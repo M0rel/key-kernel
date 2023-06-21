@@ -33,24 +33,47 @@ button_state_t get_button_state(uint8_t index)
 }
 
 static
-bool is_fn_pressed(void)
+button_state_t is_single_key_pressed(uint8_t row_index, uint8_t col_index)
 {
         button_state_t state = BUTTON_RELEASED;
-        uint8_t row_index = 0;
-        uint8_t col_index = 0;
-
-        row_index = get_fn_row_index();
-        col_index = get_fn_col_index();
 
         update_row_gpio_state(ACTIVATE, row_index);
         state = get_button_state(col_index);
         update_row_gpio_state(DEACTIVATE, row_index);
 
-        if (BUTTON_PRESSED == state) {
-                return true;
+        return state;
+}
+
+static
+button_state_t is_fn_pressed(void)
+{
+        button_state_t state = BUTTON_PRESSED;
+        uint8_t row_index = 0;
+        uint8_t col_index = 0;
+
+        bool time_passed = false;
+        row_index = get_fn_row_index();
+        col_index = get_fn_col_index();
+
+        state = is_single_key_pressed(row_index, col_index);
+        set_current_time();
+
+        while (BUTTON_PRESSED == state) {
+                time_passed = is_time_passed_ms(2000);
+                if (true == time_passed) {
+                        reboot_bootloader();
+
+                        /* Should not back here */
+                        break;
+                }
+
+                state = is_single_key_pressed(row_index, col_index);
         }
 
-        return false;
+        clean_time();
+
+        /* TODO: do we need it? */
+        return state;
 }
 
 void get_pressed_keys(keyboard_desc_st_t *key_desc)
