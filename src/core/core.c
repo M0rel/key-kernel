@@ -14,15 +14,26 @@ uint8_t pressed_keys[255] = {0};
 keyboard_desc_st_t key_desc = {0};
 usb_report_st_t usb_report = {0};
 
-int user_main(void)
+static
+void usb_report_init(void)
 {
         usb_report.id = 1;
+}
 
-        key_desc.keys_layout = get_keys_layout(OS_WINDOWS);
+void key_descriptor_init(void)
+{
+        key_desc.keys_layout = get_keys_layout(OS_MAC);
         key_desc.keys_row_cnt = get_keys_row_cnt();
         key_desc.keys_col_cnt = get_keys_col_cnt();
-
         key_desc.pressed_keys = pressed_keys;
+}
+
+int user_main(void)
+{
+        usb_report_init();
+        key_descriptor_init();
+
+        timer_init();
 
         delay_ms(3000);
 
