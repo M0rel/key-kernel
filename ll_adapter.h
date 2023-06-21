@@ -27,4 +27,6 @@ void clean_time(void);
 
 bool is_time_passed_ms(size_t time_ms);
 
+void reboot_bootloader(void);
+
 #endif /* __LL_ADAPTER_H__ */
