@@ -24,6 +24,7 @@ int user_main(void)
 
         key_desc.pressed_keys = pressed_keys;
 
+        start_timer();
         delay_ms(3000);
 
         while (true) {
