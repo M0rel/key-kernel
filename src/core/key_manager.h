@@ -14,12 +14,12 @@ typedef enum {
 
 /* TODO: Should it be in another file/layer? */
 typedef struct keyboard_desc {
-        uint8_t *keys_layout;
-        uint8_t keys_row_cnt;
-        uint8_t keys_col_cnt;
-        uint8_t *pressed_keys;
-        uint8_t pressed_cnt;
-        bool    fn_pressed;
+        uint8_t        *keys_layout;
+        uint8_t        keys_row_cnt;
+        uint8_t        keys_col_cnt;
+        uint8_t        *pressed_keys;
+        uint8_t        pressed_cnt;
+        button_state_t fn_pressed;
 } keyboard_desc_st_t;
 
 void get_pressed_keys(keyboard_desc_st_t *key_desc);
