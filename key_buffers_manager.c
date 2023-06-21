@@ -47,7 +47,7 @@ uint8_t fill_buffer_gaps(uint8_t *buff, uint8_t size)
 
         buffer_size = count;
 
-        while (count < size || count < MAX_ITER_CNT) {
+        while (count < size && count < MAX_ITER_CNT) {
                 buff[count] = NO_KEY;
                 count++;
         }
