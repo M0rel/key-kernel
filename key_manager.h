@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "key_layout_provider.h"
+
 #define FN_KEY_ROW_INDEX        5
 #define FN_KEY_COL_INDEX        10
 
@@ -20,6 +22,7 @@ typedef struct keyboard_desc {
         uint8_t        *pressed_keys;
         uint8_t        pressed_cnt;
         button_state_t fn_pressed;
+        os_t           current_os;
 } keyboard_desc_st_t;
 
 void get_pressed_keys(keyboard_desc_st_t *key_desc);

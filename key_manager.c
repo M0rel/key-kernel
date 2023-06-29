@@ -45,13 +45,39 @@ button_state_t is_single_key_pressed(uint8_t row_index, uint8_t col_index)
 }
 
 static
-button_state_t is_fn_pressed(void)
+button_state_t is_home_pressed(void)
 {
-        button_state_t state = BUTTON_PRESSED;
+        return is_single_key_pressed(1, 15);
+}
+
+static
+os_t switch_os(void)
+{
+        static bool flag = false;
+        os_t ret_os = OS_WINDOWS;
+
+        if (flag) {
+                ret_os = OS_WINDOWS;
+        } else {
+                ret_os = OS_MAC;
+        }
+
+        flag = !flag;
+
+        return ret_os;
+}
+
+static
+button_state_t is_fn_pressed(keyboard_desc_st_t *key_desc)
+{
+        button_state_t state = BUTTON_RELEASED;
         uint8_t row_index = 0;
         uint8_t col_index = 0;
-
         bool time_passed = false;
+
+        static button_state_t home_state_current = BUTTON_RELEASED;
+        static button_state_t home_state_prev = BUTTON_RELEASED;
+
         row_index = get_fn_row_index();
         col_index = get_fn_col_index();
 
@@ -67,6 +93,15 @@ button_state_t is_fn_pressed(void)
                         break;
                 }
 
+                home_state_current = is_home_pressed();
+                if (BUTTON_PRESSED == home_state_current &&
+                    BUTTON_PRESSED != home_state_prev) {
+                        /* need to add counting down timer */
+                        key_desc->keys_layout =
+                                get_keys_layout(switch_os());
+                }
+
+                home_state_prev = home_state_current;
                 state = is_single_key_pressed(row_index, col_index);
         }
 
@@ -93,7 +128,7 @@ void get_pressed_keys(keyboard_desc_st_t *key_desc)
         pressed_keys = key_desc->pressed_keys;
         keys_layout = key_desc->keys_layout;
 
-        key_desc->fn_pressed = is_fn_pressed();
+        key_desc->fn_pressed = is_fn_pressed(key_desc);
 
         for (i = 0; i < key_desc->keys_row_cnt; i++) {
                 update_row_gpio_state(ACTIVATE, i);

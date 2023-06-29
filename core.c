@@ -18,7 +18,7 @@ int user_main(void)
 {
         usb_report.id = 1;
 
-        key_desc.keys_layout = get_keys_layout(OS_WINDOWS);
+        key_desc.keys_layout = get_keys_layout(OS_MAC);
         key_desc.keys_row_cnt = get_keys_row_cnt();
         key_desc.keys_col_cnt = get_keys_col_cnt();
 
