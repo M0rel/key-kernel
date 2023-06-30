@@ -9,6 +9,7 @@
 extern USBD_HandleTypeDef hUsbDeviceFS;
 
 extern TIM_HandleTypeDef htim11;
+extern I2C_HandleTypeDef hi2c1;
 
 volatile uint16_t timer_val = 0;
 #define REBOOT_DELAY_SEC        3
@@ -91,6 +92,12 @@ void usb_send_report(void *report, size_t size)
         USBD_HID_SendReport(&hUsbDeviceFS, (uint8_t *)report, size);
 }
 
+void blink_led(void)
+{
+        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+        HAL_Delay(500);
+}
+
 static
 void indicate_reboot(void)
 {
@@ -135,3 +142,14 @@ bool is_time_passed_ms(size_t time_ms)
 
         return false;
 }
+
+void i2c_write(uint8_t dev_addr, uint8_t reg, uint8_t data)
+{
+        uint8_t tx_data[2] = {0};
+        tx_data[0] = reg;
+        tx_data[1] = data;
+
+        HAL_I2C_Master_Transmit(&hi2c1, dev_addr << 1, tx_data, sizeof(tx_data),
+                                HAL_MAX_DELAY);
+}
+

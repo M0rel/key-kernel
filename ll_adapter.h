@@ -29,4 +29,8 @@ bool is_time_passed_ms(size_t time_ms);
 
 void reboot_bootloader(void);
 
+void blink_led(void);
+
+void i2c_write(uint8_t dev_addr, uint8_t reg, uint8_t data);
+
 #endif /* __LL_ADAPTER_H__ */

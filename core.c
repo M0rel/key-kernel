@@ -16,23 +16,28 @@ usb_report_st_t usb_report = {0};
 
 int user_main(void)
 {
-        usb_report.id = 1;
+        //usb_report.id = 1;
 
-        key_desc.keys_layout = get_keys_layout(OS_MAC);
-        key_desc.keys_row_cnt = get_keys_row_cnt();
-        key_desc.keys_col_cnt = get_keys_col_cnt();
+        //key_desc.keys_layout = get_keys_layout(OS_MAC);
+        //key_desc.keys_row_cnt = get_keys_row_cnt();
+        //key_desc.keys_col_cnt = get_keys_col_cnt();
 
-        key_desc.pressed_keys = pressed_keys;
+        //key_desc.pressed_keys = pressed_keys;
 
-        start_timer();
+        //start_timer();
         delay_ms(3000);
+        i2c_write(0x74, 0xfd, 0x0b);
+        i2c_write(0x74, 0x0a, 0x01);
+        i2c_write(0x74, 0xfd, 0x00);
+        i2c_write(0x74, 0x24, 0xff);
 
         while (true) {
-                get_pressed_keys(&key_desc);
+                blink_led();
+                //get_pressed_keys(&key_desc);
 
-                prepare_send_buffer(&key_desc, &usb_report);
+                //prepare_send_buffer(&key_desc, &usb_report);
 
-                usb_send_report(&usb_report, sizeof(usb_report_st_t));
+                //usb_send_report(&usb_report, sizeof(usb_report_st_t));
         };
 
         return 0;
