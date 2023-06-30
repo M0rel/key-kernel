@@ -1,0 +1,18 @@
+# Makefile to include in a main STM32 Cube Makefile
+# TODO: Now we have dependency to a HIGH level, need to fix it.
+#
+
+KEY_KERNEL_PATH = Core/Src/key-kernel/src
+
+KEY_KERNEL_SRCS = \
+${KEY_KERNEL_PATH}/core/core.c \
+${KEY_KERNEL_PATH}/core/key_buffers_manager.c \
+${KEY_KERNEL_PATH}/core/key_layout_provider.c \
+${KEY_KERNEL_PATH}/core/key_manager.c \
+${KEY_KERNEL_PATH}/low_level_api/ll_adapter.c \
+
+KEY_KERNEL_INC = \
+-I${KEY_KERNEL_PATH} \
+-I${KEY_KERNEL_PATH}/core \
+-I${KEY_KERNEL_PATH}/low_level_api \
+
