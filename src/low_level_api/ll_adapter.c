@@ -11,6 +11,8 @@ extern USBD_HandleTypeDef hUsbDeviceFS;
 extern TIM_HandleTypeDef htim11;
 
 volatile uint16_t time_record = 0;
+#define REBOOT_DELAY_SEC        3
+
 GPIO_TypeDef *col_ports[] = {
         GPIOB,  /* index = 0 */
         GPIOB,  /* index = 1 */
@@ -87,6 +89,24 @@ void delay_ms(uint32_t delay)
 void usb_send_report(void *report, size_t size)
 {
         USBD_HID_SendReport(&hUsbDeviceFS, (uint8_t *)report, size);
+}
+
+static
+void indicate_reboot(void)
+{
+        int i = 0;
+        for (; i < REBOOT_DELAY_SEC; i++) {
+                HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+                HAL_Delay(500);
+        }
+}
+
+void reboot_bootloader(void)
+{
+        /* Charge capacitor connected to BOOT1 */
+        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);
+        indicate_reboot();
+        NVIC_SystemReset();
 }
 
 static
