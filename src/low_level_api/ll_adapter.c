@@ -11,6 +11,25 @@ extern USBD_HandleTypeDef hUsbDeviceFS;
 extern TIM_HandleTypeDef htim11;
 
 volatile uint16_t time_record = 0;
+GPIO_TypeDef *col_ports[] = {
+        GPIOB,  /* index = 0 */
+        GPIOB,  /* index = 1 */
+        GPIOB,  /* index = 2 */
+        GPIOB,  /* index = 3 */
+        GPIOB,  /* index = 4 */
+        GPIOB,  /* index = 5 */
+        GPIOB,  /* index = 6 */
+        GPIOB,  /* index = 7 */
+        GPIOB,  /* index = 8 */
+        GPIOB,  /* index = 9 */
+        GPIOB, /* index = 10 */
+        GPIOB, /* index = 11 */
+        GPIOB, /* index = 12 */
+        GPIOB, /* index = 13 */
+        GPIOB, /* index = 14 */
+        GPIOC, /* index = 15 */
+};
+
 uint16_t col_gpios[] = {
         GPIO_PIN_0,  /* index = 0 */
         GPIO_PIN_1,  /* index = 1 */
@@ -52,7 +71,7 @@ bool get_button_state_ll(uint8_t index)
 {
         GPIO_PinState state = GPIO_PIN_RESET;
 
-        state = HAL_GPIO_ReadPin(GPIOB, col_gpios[index]);
+        state = HAL_GPIO_ReadPin(col_ports[index], col_gpios[index]);
         if (GPIO_PIN_SET == state) {
                 return true;
         }
