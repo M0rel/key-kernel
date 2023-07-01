@@ -27,15 +27,16 @@ uint16_t col_gpios[] = {
         GPIO_PIN_13, /* index = 12 */
         GPIO_PIN_14, /* index = 13 */
         GPIO_PIN_15, /* index = 14 */
+        GPIO_PIN_14, /* index = 15 */
 };
 
 uint16_t row_gpios[] = {
-        GPIO_PIN_1, /* index = 0 */
-        GPIO_PIN_2, /* index = 1 */
-        GPIO_PIN_3, /* index = 2 */
-        GPIO_PIN_4, /* index = 3 */
-        GPIO_PIN_5, /* index = 4 */
-        GPIO_PIN_6, /* index = 5 */
+        GPIO_PIN_0, /* index = 0 */
+        GPIO_PIN_1, /* index = 1 */
+        GPIO_PIN_2, /* index = 2 */
+        GPIO_PIN_3, /* index = 3 */
+        GPIO_PIN_4, /* index = 4 */
+        GPIO_PIN_5, /* index = 5 */
 };
 
 void update_row_gpio_state_ll(gpio_action_t action, uint8_t index)
