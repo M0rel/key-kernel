@@ -1,9 +1,17 @@
 #include <stdint.h>
 
 #include "key_layout_provider.h"
+#include "ll_adapter.h"
 
 #define KEY_ARRAY_ROW_CNT       6
 #define KEY_ARRAY_COL_CNT       16
+
+uint8_t consumer_layout[] = {
+        /* Row 0 */
+        NO_KEY, NO_KEY, NO_KEY, NO_KEY, NO_KEY, NO_KEY, NO_KEY, BIT(1),
+        BIT(4), BIT(0), BIT(5), BIT(7), BIT(6), NO_KEY,
+        NO_KEY, NO_KEY
+};
 
 uint8_t keys_layout_dflt[] = {
         /* Row 0 */
@@ -69,6 +77,11 @@ uint8_t *get_keys_layout(os_t os)
         default:
                 return keys_layout_dflt;
         }
+}
+
+uint8_t *get_consumer_layout(void)
+{
+        return consumer_layout;
 }
 
 uint8_t get_keys_row_cnt(void)

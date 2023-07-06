@@ -10,6 +10,8 @@ typedef enum {
 } os_t;
 
 uint8_t *get_keys_layout(os_t os);
+uint8_t *get_consumer_layout(void);
+
 uint8_t get_keys_row_cnt(void);
 uint8_t get_keys_col_cnt(void);
 
