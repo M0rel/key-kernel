@@ -36,6 +36,11 @@ uint8_t fill_buffer_gaps(uint8_t *buff, uint8_t size)
         uint8_t count = 0;
         uint8_t buffer_size = 0;
 
+        if (NULL == buff) {
+                /* TODO: -1? */
+                return 0;
+        }
+
         for (i = 0; i < size; i++) {
                 if (NO_KEY == buff[i]) {
                         continue;
@@ -62,6 +67,10 @@ void set_modifier_keys(keyboard_desc_st_t *key_desc, usb_report_st_t *report)
         uint8_t key = 0;
         int i = 0;
 
+        if (NULL == key_desc || NULL == report) {
+                return;
+        }
+
         for (i = 0; i < key_desc->pressed_cnt; i++) {
                 key = key_desc->pressed_keys[i];
                 if (KEY_LEFT_CTRL <= key && KEY_RIGHT_GUI >= key) {
@@ -84,6 +93,10 @@ void prepare_buffers(keyboard_desc_st_t *key_desc, usb_report_st_t *report)
         bool key_found = false;
         int i = 0;
         int j = 0;
+
+        if (NULL == key_desc || NULL == report) {
+                return;
+        }
 
         /* Iterate over every field in report */
         for (i = 0; i < MAX_PRESSED_IN_REPORT; i++) {
@@ -120,6 +133,10 @@ void fill_usb_report_keys_buffer(keyboard_desc_st_t *key_desc,
 {
         int start_idx = 0;
         int key_idx = 0;
+
+        if (NULL == key_desc || NULL == report) {
+                return;
+        }
 
         start_idx = fill_buffer_gaps(report->keys, MAX_PRESSED_IN_REPORT);
 
