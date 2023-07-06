@@ -76,47 +76,43 @@ button_state_t is_fn_pressed(void)
         return state;
 }
 
-void get_pressed_keys(keyboard_desc_st_t *key_desc)
 {
-        button_state_t state = BUTTON_RELEASED;
-        uint8_t pressed_cnt = 0;
-        uint8_t keymap_indx = 0;
         uint8_t *pressed_keys = NULL;
         uint8_t *keys_layout = NULL;
+
+                return;
+        }
+
+
+
+
+
+
+
+void get_pressed_keys(keyboard_desc_st_t *key_desc)
+{
+        button_state_t fn_state = BUTTON_RELEASED;
+        uint8_t pressed_cnt = 0;
+        int start_indx = 0;
         int i = 0;
-        int j = 0;
 
         if (NULL == key_desc) {
                 return;
         }
 
-        pressed_keys = key_desc->pressed_keys;
-        keys_layout = key_desc->keys_layout;
+        memset(key_desc->pressed_keys, 0, 16);
 
-        key_desc->fn_pressed = is_fn_pressed();
+        fn_state = process_fn_key(key_desc);
+        if (BUTTON_PRESSED == fn_state) {
+                do_when_key_pressed(key_desc, start_indx, &pressed_cnt,
+                                    fill_consumer_keys);
+                pressed_cnt = 0;
+                start_indx = 1;
+        }
 
-        for (i = 0; i < key_desc->keys_row_cnt; i++) {
-                update_row_gpio_state(ACTIVATE, i);
-
-                for (j = 0; j < key_desc->keys_col_cnt; j++) {
-                        state = get_button_state(j);
-                        if (BUTTON_RELEASED == state) {
-                                continue;
-                        }
-
-                        /* To pass a pointers to array in a normal way it's
-                         * decided to use single-dimensional array instead of
-                         * two-dimensional.
-                         * Example: Need to access element with index [2][2] of
-                         * 4x4 two-dimensional array
-                         * It may look like: 2 * 4 + 2 */
-                        keymap_indx = i * key_desc->keys_col_cnt + j;
-                        pressed_keys[pressed_cnt] = keys_layout[keymap_indx];
-
-                        pressed_cnt++;
-                }
-
-                update_row_gpio_state(DEACTIVATE, i);
+        for (i = start_indx; i < key_desc->keys_row_cnt; i++) {
+                do_when_key_pressed(key_desc, i, &pressed_cnt,
+                                    fill_regular_keys);
         }
 
         key_desc->pressed_cnt = pressed_cnt;
