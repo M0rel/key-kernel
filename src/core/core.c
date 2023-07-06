@@ -34,7 +34,7 @@ int user_main(void)
 
         timer_init();
 
-        delay_ms(3000);
+        delay_ms(1000);
 
         while (true) {
                 get_pressed_keys(&key_desc);
