@@ -9,8 +9,7 @@
 
 #include "ll_adapter.h"
 
-/* TODO: proper size */
-uint8_t pressed_keys[255] = {0};
+uint8_t pressed_keys[16] = {0};
 keyboard_desc_st_t key_desc = {0};
 usb_report_st_t usb_report = {0};
 
