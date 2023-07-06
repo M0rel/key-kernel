@@ -8,9 +8,10 @@
 
 uint8_t consumer_layout[] = {
         /* Row 0 */
-        NO_KEY, NO_KEY, NO_KEY, NO_KEY, NO_KEY, NO_KEY, NO_KEY, BIT(1),
-        BIT(4), BIT(0), BIT(5), BIT(7), BIT(6), NO_KEY,
-        NO_KEY, NO_KEY
+        NO_KEY, NO_KEY, NO_KEY, NO_KEY, NO_KEY, NO_KEY, NO_KEY,
+        /*F7    F8,     F9,     F10,    F11,    F12 */
+        BIT(1), BIT(4), BIT(0), BIT(5), BIT(7), BIT(6),
+        NO_KEY, NO_KEY, NO_KEY
 };
 
 uint8_t keys_layout_dflt[] = {
