@@ -12,14 +12,23 @@ typedef enum {
         BUTTON_PRESSED  = 1,
 } button_state_t;
 
-/* TODO: Should it be in another file/layer? */
+typedef struct functional_info {
+        button_state_t home_prev;
+        bool           os_state;
+        bool           time_initialized;
+} functional_info_st_t;
+
 typedef struct keyboard_desc {
-        uint8_t        *keys_layout;
-        uint8_t        keys_row_cnt;
-        uint8_t        keys_col_cnt;
-        uint8_t        *pressed_keys;
-        uint8_t        pressed_cnt;
-        button_state_t fn_pressed;
+        uint8_t                *consumer_layout;
+        uint8_t                *keys_layout;
+        uint8_t                keys_row_cnt;
+        uint8_t                keys_col_cnt;
+        uint8_t                *pressed_keys;
+        uint8_t                pressed_cnt;
+        uint8_t                pressed_consumer;
+        button_state_t         fn_pressed;
+        bool                   layout_state;
+        struct functional_info functional;
 } keyboard_desc_st_t;
 
 void get_pressed_keys(keyboard_desc_st_t *key_desc);
