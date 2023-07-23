@@ -4,9 +4,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define FN_KEY_ROW_INDEX        5
-#define FN_KEY_COL_INDEX        10
-
 typedef enum {
         BUTTON_RELEASED = 0,
         BUTTON_PRESSED  = 1,

@@ -6,6 +6,7 @@
 
 #include "ll_adapter.h"
 
+#if 0
 static inline
 uint8_t get_fn_row_index()
 {
@@ -17,6 +18,7 @@ uint8_t get_fn_col_index()
 {
         return FN_KEY_COL_INDEX;
 }
+#endif
 
 static
 void update_row_gpio_state(gpio_action_t action, uint8_t index)
@@ -52,25 +54,20 @@ button_state_t is_single_key_pressed(uint8_t row_index, uint8_t col_index)
 static inline
 button_state_t is_home_pressed(void)
 {
-        return is_single_key_pressed(1, 15);
+        return is_single_key_pressed(15, 1);
 }
 
 static inline
 button_state_t is_del_pressed(void)
 {
+        //return is_single_key_pressed(0, 15);
         return is_single_key_pressed(0, 15);
 }
 
 static inline
 button_state_t is_fn_pressed(void)
 {
-        uint8_t row_index = 0;
-        uint8_t col_index = 0;
-
-        row_index = get_fn_row_index();
-        col_index = get_fn_col_index();
-
-        return is_single_key_pressed(row_index, col_index);
+        return is_single_key_pressed(5, 9);
 }
 
 static
@@ -136,18 +133,18 @@ void do_when_key_pressed(keyboard_desc_st_t *key_desc, uint8_t row_index,
         }
 
         update_row_gpio_state(ACTIVATE, row_index);
-        for (j = 0; j < key_desc->keys_col_cnt; j++) {
+        //for (j = 0; j < key_desc->keys_col_cnt; j++) {
+        for (j = 0; j < 6; j++) {
                 state = get_button_state(j);
                 if (BUTTON_RELEASED == state) {
                         continue;
                 }
 
-                keymap_indx = row_index * key_desc->keys_col_cnt + j;
+                keymap_indx = row_index * 6 + j;
                 handler(key_desc, *pressed_cnt, keymap_indx);
 
                 (*pressed_cnt)++;
         }
-
         update_row_gpio_state(DEACTIVATE, row_index);
 }
 
@@ -241,7 +238,7 @@ void get_pressed_keys(keyboard_desc_st_t *key_desc)
                 start_indx = 1;
         }
 
-        for (i = start_indx; i < key_desc->keys_row_cnt; i++) {
+        for (i = start_indx; i < 16; i++) {
                 do_when_key_pressed(key_desc, i, &pressed_cnt,
                                     fill_regular_keys);
         }

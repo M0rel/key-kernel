@@ -13,24 +13,26 @@ extern TIM_HandleTypeDef htim11;
 volatile uint16_t time_record = 0;
 #define REBOOT_DELAY_SEC        3
 
+#if 0
 GPIO_TypeDef *col_ports[] = {
-        GPIOB,  /* index = 0 */
-        GPIOB,  /* index = 1 */
-        GPIOB,  /* index = 2 */
-        GPIOB,  /* index = 3 */
-        GPIOB,  /* index = 4 */
-        GPIOB,  /* index = 5 */
-        GPIOB,  /* index = 6 */
-        GPIOB,  /* index = 7 */
-        GPIOB,  /* index = 8 */
-        GPIOB,  /* index = 9 */
-        GPIOB, /* index = 10 */
-        GPIOB, /* index = 11 */
-        GPIOB, /* index = 12 */
-        GPIOB, /* index = 13 */
-        GPIOB, /* index = 14 */
+        GPIOC,  /* index = 0 */
+        GPIOC,  /* index = 1 */
+        GPIOC,  /* index = 2 */
+        GPIOC,  /* index = 3 */
+        GPIOC,  /* index = 4 */
+        GPIOC,  /* index = 5 */
+        GPIOC,  /* index = 6 */
+        GPIOC,  /* index = 7 */
+        GPIOC,  /* index = 8 */
+        GPIOC,  /* index = 9 */
+        GPIOC, /* index = 10 */
+        GPIOC, /* index = 11 */
+        GPIOC, /* index = 12 */
+        GPIOC, /* index = 13 */
+        GPIOC, /* index = 14 */
         GPIOC, /* index = 15 */
 };
+#endif
 
 uint16_t col_gpios[] = {
         GPIO_PIN_0,  /* index = 0 */
@@ -39,16 +41,6 @@ uint16_t col_gpios[] = {
         GPIO_PIN_3,  /* index = 3 */
         GPIO_PIN_4,  /* index = 4 */
         GPIO_PIN_5,  /* index = 5 */
-        GPIO_PIN_6,  /* index = 6 */
-        GPIO_PIN_7,  /* index = 7 */
-        GPIO_PIN_8,  /* index = 8 */
-        GPIO_PIN_9,  /* index = 9 */
-        GPIO_PIN_10, /* index = 10 */
-        GPIO_PIN_12, /* index = 11 */
-        GPIO_PIN_13, /* index = 12 */
-        GPIO_PIN_14, /* index = 13 */
-        GPIO_PIN_15, /* index = 14 */
-        GPIO_PIN_14, /* index = 15 */
 };
 
 uint16_t row_gpios[] = {
@@ -58,14 +50,24 @@ uint16_t row_gpios[] = {
         GPIO_PIN_3, /* index = 3 */
         GPIO_PIN_4, /* index = 4 */
         GPIO_PIN_5, /* index = 5 */
+        GPIO_PIN_6,  /* index = 6 */
+        GPIO_PIN_7,  /* index = 7 */
+        GPIO_PIN_8,  /* index = 8 */
+        GPIO_PIN_9,  /* index = 9 */
+        GPIO_PIN_10, /* index = 10 */
+        GPIO_PIN_11, /* index = 11 */
+        GPIO_PIN_12, /* index = 11 */
+        GPIO_PIN_13, /* index = 12 */
+        GPIO_PIN_14, /* index = 13 */
+        GPIO_PIN_15, /* index = 14 */
 };
 
 void update_row_gpio_state_ll(gpio_action_t action, uint8_t index)
 {
         if (ACTIVATE == action) {
-                HAL_GPIO_WritePin(GPIOA, row_gpios[index], GPIO_PIN_SET);
+                HAL_GPIO_WritePin(GPIOC, row_gpios[index], GPIO_PIN_SET);
         } else {
-                HAL_GPIO_WritePin(GPIOA, row_gpios[index], GPIO_PIN_RESET);
+                HAL_GPIO_WritePin(GPIOC, row_gpios[index], GPIO_PIN_RESET);
         }
 }
 
@@ -73,7 +75,7 @@ bool get_button_state_ll(uint8_t index)
 {
         GPIO_PinState state = GPIO_PIN_RESET;
 
-        state = HAL_GPIO_ReadPin(col_ports[index], col_gpios[index]);
+        state = HAL_GPIO_ReadPin(GPIOA, col_gpios[index]);
         if (GPIO_PIN_SET == state) {
                 return true;
         }
@@ -100,13 +102,20 @@ void indicate_reboot(void)
                 HAL_Delay(500);
         }
 }
+#define MEM_ADDR         0x08020000
 
 void reboot_bootloader(void)
 {
+  typedef void (*jump_app)(void);
+  volatile uint32_t *_vectable = (__IO uint32_t*)MEM_ADDR;
+      jump_app app_jump = (jump_app) *(_vectable + 1);   // get the address of the application's reset handler by loading the 2nd entry in the table
+    SCB->VTOR = _vectable;   // point VTOR to the start of the application's vector table
+    __set_MSP(*_vectable);   // setup the initial stack pointer using the RAM address contained at the start of the vector table
+    app_jump();   // call the application's reset handler
         /* Charge capacitor connected to BOOT1 */
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);
-        indicate_reboot();
-        NVIC_SystemReset();
+        //HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);
+        //indicate_reboot();
+        //NVIC_SystemReset();
 }
 
 static
